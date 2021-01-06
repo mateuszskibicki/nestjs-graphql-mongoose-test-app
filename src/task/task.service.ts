@@ -21,12 +21,10 @@ export class TaskService {
    * @returns {Task}
    */
   async getTaskById({ user, id }: GetTaskByIdParams): Promise<Task> {
-    console.log(user, id);
     const task = await this.taskModel.findOne({
       _id: id,
       user: user._id,
     });
-    console.log(task);
     if (!task) throw new NotFoundException();
     return task;
   }

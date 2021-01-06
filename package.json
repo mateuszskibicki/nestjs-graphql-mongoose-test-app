@@ -41,6 +41,7 @@
     "dotenv": "^8.2.0",
     "graphql": "^15.4.0",
     "graphql-tools": "^7.0.2",
+    "mockingoose": "^2.13.2",
     "mongodb": "^3.6.3",
     "mongoose": "^5.11.9",
     "passport": "^0.4.1",
