@@ -1,19 +1,24 @@
+import * as dotenv from 'dotenv';
+dotenv.config();
 import { Module } from '@nestjs/common';
 import { GraphQLModule } from '@nestjs/graphql';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
-import { LessonModule } from './lesson/lesson.module';
-import { StudentModule } from './student/student.module';
+import { AuthModule } from './auth/auth.module';
+import { TaskModule } from './task/task.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
-    MongooseModule.forRoot(process.env.MONGO_CONN_STRING),
+    ConfigModule.forRoot({ isGlobal: true }),
+    MongooseModule.forRoot(process.env.MONGO_CONN_STRING, {
+      useNewUrlParser: true,
+      useCreateIndex: true,
+    }),
     GraphQLModule.forRoot({
       autoSchemaFile: true,
     }),
-    LessonModule,
-    StudentModule,
+    AuthModule,
+    TaskModule,
   ],
 })
 export class AppModule {}

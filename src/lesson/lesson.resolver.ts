@@ -1,3 +1,6 @@
+import { User } from './../auth/models/user.schema';
+import { CurrentUser } from './../auth/decorators/current-user.decorator';
+import { GqlAuthGuard } from './../auth/guards/jwt-auth.guard';
 import {
   Resolver,
   Query,
@@ -15,6 +18,7 @@ import {
 } from './dto';
 import { Student, StudentType } from '../student/models';
 import { StudentService } from '../student/student.service';
+import { UseGuards } from '@nestjs/common';
 
 const returnLessonType = () => LessonType;
 const returnLessonsType = () => [LessonType];
@@ -29,8 +33,9 @@ export class LessonResolver {
   /**
    * Fetch single lesson by ID
    */
+  @UseGuards(GqlAuthGuard)
   @Query(returnLessonType, { nullable: true })
-  lesson(@Args('id') id: string): Promise<Lesson> {
+  lesson(@Args('id') id: string, @CurrentUser() user: User): Promise<Lesson> {
     return this.lessonService.getLessonById(id);
   }
 
