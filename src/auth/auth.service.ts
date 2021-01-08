@@ -14,7 +14,7 @@ import { AuthCredentialsDto } from './dto';
 import { JWTPayload } from './interfaces';
 import { ObjectId } from 'mongodb';
 
-const hashPassword = async (password: string, salt: string): Promise<String> =>
+const hashPassword = async (password: string, salt: string): Promise<string> =>
   await bcrypt.hash(password, salt);
 
 const validatePassword = async (

@@ -56,10 +56,13 @@ export class TaskService {
    * @returns {Task}
    */
   async createTask({ user, createTaskInput }: CreateTaskParams): Promise<Task> {
-    return await new this.taskModel({
-      ...createTaskInput,
+    return await this.taskModel.create({
       user: user._id,
-    }).save();
+      startDate: createTaskInput.startDate,
+      endDate: createTaskInput.endDate,
+      description: createTaskInput.description,
+      status: createTaskInput.status,
+    });
   }
 
   /**
@@ -74,15 +77,13 @@ export class TaskService {
     id,
   }: UpdateTaskParams): Promise<Task> {
     const task = await this.getTaskById({ user, id });
-    await this.taskModel
-      .updateOne(
-        { _id: id },
-        {
-          ...new this.taskModel(task).toObject(),
-          ...updateTaskInput,
-        },
-      )
-      .exec();
+    await this.taskModel.updateOne(
+      { _id: id },
+      {
+        ...new this.taskModel(task).toObject(),
+        ...updateTaskInput,
+      },
+    );
     return await this.getTaskById({ user, id });
   }
 
