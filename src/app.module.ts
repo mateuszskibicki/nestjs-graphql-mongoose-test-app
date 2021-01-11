@@ -10,7 +10,7 @@ import { TaskModule } from './task/task.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    MongooseModule.forRoot(process.env.MONGO_CONN_STRING ?? 'abc', {
+    MongooseModule.forRoot(process.env.MONGO_CONN_STRING, {
       useNewUrlParser: true,
       useCreateIndex: true,
     }),

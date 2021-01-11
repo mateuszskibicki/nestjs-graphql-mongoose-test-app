@@ -93,9 +93,9 @@ export class TaskService {
    * @throws {NotFoundException}
    * @returns {Task}
    */
-  async deleteTask({ user, id }: DeleteTaskByIdParams): Promise<Task> {
-    const task = await this.getTaskById({ user, id });
-    await this.taskModel.remove({ _id: id });
-    return task;
+  async deleteTask({ user, id }: DeleteTaskByIdParams): Promise<boolean> {
+    await this.getTaskById({ user, id });
+    await this.taskModel.deleteOne({ _id: id });
+    return true;
   }
 }

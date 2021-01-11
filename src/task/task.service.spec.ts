@@ -1,8 +1,6 @@
 import { getModelToken } from '@nestjs/mongoose';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Model } from 'mongoose';
-// import { AuthModule } from '../auth/auth.module';
-// import { AuthService } from '../auth/auth.service';
 import { TaskDocument } from './models';
 import { TaskService } from './task.service';
 import { NotFoundException } from '@nestjs/common';
@@ -22,7 +20,6 @@ class ModelMock {
 
 describe('TaskService', () => {
   let taskService: TaskService;
-  // let authService: AuthService;
   let taskModel: Model<TaskDocument>;
 
   afterEach(() => {
@@ -304,6 +301,70 @@ describe('TaskService', () => {
             startDate: '2020-01-01',
           }),
         );
+      });
+    });
+  });
+
+  describe('deleteTask', () => {
+    it('should be defined and a function', () => {
+      expect(taskService.deleteTask).toBeDefined();
+      expect(typeof taskService.deleteTask === 'function').toBeDefined();
+    });
+
+    describe('when finding task', () => {
+      it('should call method getTaskById with correct params', async () => {
+        const spy = jest
+          .spyOn(taskService, 'getTaskById')
+          .mockReturnValue({} as any);
+
+        await taskService.deleteTask({
+          id: 'taskId',
+          user: { _id: 'userId' } as any,
+        });
+
+        expect(spy).toHaveBeenCalledWith({
+          id: 'taskId',
+          user: { _id: 'userId' },
+        });
+      });
+
+      describe('when task does not exist', () => {
+        it('should throw NotFoundException task with provided ID is not ', async () => {
+          jest.spyOn(taskModel, 'findOne').mockReturnValue(null);
+
+          const promise = taskService.deleteTask({
+            id: 'taskId',
+            user: { _id: 'userId' } as any,
+          });
+
+          expect(async () => await promise).rejects.toThrow(NotFoundException);
+        });
+      });
+    });
+
+    describe('when success', () => {
+      it('should call deleteOne method with correct params', async () => {
+        jest.spyOn(taskModel, 'findOne').mockReturnValue({} as any);
+        const spy = jest
+          .spyOn(taskModel, 'deleteOne')
+          .mockReturnValue({} as any);
+
+        await taskService.deleteTask({
+          id: 'taskId',
+          user: { _id: 'userId' } as any,
+        });
+        expect(spy).toHaveBeenCalledWith({ _id: 'taskId' });
+      });
+
+      it('should return true', async () => {
+        jest.spyOn(taskService, 'getTaskById').mockResolvedValueOnce({} as any);
+        jest.spyOn(taskModel, 'deleteOne').mockReturnValue({} as any);
+
+        const res = await taskService.deleteTask({
+          id: 'taskId',
+          user: { _id: 'userId' } as any,
+        });
+        expect(res).toEqual(true);
       });
     });
   });

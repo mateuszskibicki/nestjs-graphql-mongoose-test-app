@@ -84,11 +84,11 @@ export class TaskResolver {
    * Delete a task
    */
   @UseGuards(GqlAuthGuard)
-  @Mutation(returnTaskType)
+  @Mutation(() => Boolean)
   deleteTask(
     @Args() { id }: TaskIDArgs,
     @CurrentUser() user: CurrentUserType,
-  ): Promise<Task> {
+  ): Promise<boolean> {
     return this.taskService.deleteTask({ user, id });
   }
 
